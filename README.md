@@ -6,13 +6,6 @@
 
 ---
 
-## 📸 Previa
-
-Demonstração do Sistema
-
-![Gravação de tela de 17-03-2026 18-19-21](https://github.com/user-attachments/assets/ba9f9a27-6e32-4e04-9e8f-72589c80a24e)
-
----
 
 ## 🛠️ Tecnologias e Ferramentas
 
