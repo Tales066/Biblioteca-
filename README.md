@@ -13,7 +13,6 @@ O projeto foi construído utilizando as seguintes tecnologias:
 
 * **Java SE**: Linguagem principal para lógica de negócio.
 * **Makefile**: Para automação de compilação e execução rápida.
-* **Paradigma OO**: Implementação rigorosa de Encapsulamento, Herança e Polimorfismo.
 
 ---
 
