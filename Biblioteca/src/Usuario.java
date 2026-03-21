@@ -5,7 +5,6 @@ public class Usuario {
     private String nome;
     private ArrayList<Emprestimo> emprestimosAtivos;
 
-    
     public Usuario(String nome) {
         this.nome = nome;
         this.emprestimosAtivos = new ArrayList<>();
@@ -34,6 +33,31 @@ public class Usuario {
 
     public void devolverEmprestimo(Emprestimo emprestimo) {
         emprestimosAtivos.remove(emprestimo);
+    }
+
+   
+    public void listarLivrosPorGenero(String generoDesejado) {
+        System.out.println("\n═══■ FILTRANDO POR GÊNERO: " + generoDesejado.toUpperCase() + " ■═══");
+        
+        boolean encontrou = false;
+        for (Emprestimo e : emprestimosAtivos) {
+           
+            if (e.getLivro().getGenero().equalsIgnoreCase(generoDesejado)) {
+                encontrou = true;
+                System.out.println(" ,---.               " + e.getLivro().getTitulo());
+                System.out.println(" |   |               Autor: " + e.getLivro().getAutor());
+                System.out.println(" |   |               Data empréstimo: " + e.getDataEmprestimo());
+                System.out.println(" |   |               Data devolução: " + e.getDataDevolucao());
+                System.out.println(" |   |               Atrasado: " + (e.estaAtrasado() ? "Sim" : "Não"));
+                System.out.println(" '---'");
+                System.out.println("----------------------");
+            }
+        }
+
+        if (!encontrou) {
+            System.out.println("Você não possui livros de " + generoDesejado + " emprestados.");
+        }
+        System.out.println("═══■════■════■════■════■════■════■════■════■═══");
     }
 
     public void mostrarPerfil() {

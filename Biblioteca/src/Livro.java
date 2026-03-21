@@ -2,11 +2,13 @@ public class Livro {
 
     private String titulo;
     private String autor;
+    private String genero;
     private int quantidade;
 
-    public Livro(String titulo, String autor, int quantidade) {
+    public Livro(String titulo, String autor, String genero, int quantidade) {
         this.titulo = titulo;
         this.autor = autor;
+        this.genero = genero;
         this.quantidade = quantidade;
     }
 
@@ -17,6 +19,10 @@ public class Livro {
 
     public String getAutor() {
         return autor;
+    }
+
+    public String getGenero() {
+        return genero;
     }
 
     public int getQuantidade() {
@@ -40,9 +46,11 @@ public class Livro {
     }
 
     public void mostrar() {
-        System.out.println("Título: " + titulo);
-        System.out.println("Autor: " + autor);
-        System.out.println("Quantidade disponível: " + quantidade);
+        System.out.println(" ,---.               " + titulo);
+        System.out.println(" |   |               Autor: " + autor);
+        System.out.println(" |   |               Gênero: " + genero); 
+        System.out.println(" |   |               Disponíveis: " + quantidade);
+        System.out.println(" '---'");
         System.out.println("----------------------");
     }
 }

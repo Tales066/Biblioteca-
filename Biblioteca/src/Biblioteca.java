@@ -34,13 +34,14 @@ public class Biblioteca {
         return null;
     }
 
-    // Livros
+    // --- Livros ---
     public void cadastrarLivro(Livro livro) {
         livros.add(livro);
     }
 
-    public void cadastrarLivro(String titulo, String autor, int quantidade) {
-        Livro livro = new Livro(titulo, autor, quantidade);
+    // para incluir gênero 
+    public void cadastrarLivro(String titulo, String autor, String genero, int quantidade) {
+        Livro livro = new Livro(titulo, autor, genero, quantidade);
         livros.add(livro);
     }
 
@@ -52,6 +53,30 @@ public class Biblioteca {
         for (Livro l : livros) {
             l.mostrar();
         }
+    }
+
+    // focado no acervo geral com sua estrutura visual
+    public void listarLivrosPorGenero(String genero) {
+        boolean encontrado = false;
+        System.out.println("\n═══════════════════════════════════════════════");
+        System.out.println("       LIVROS DO GÊNERO: " + genero.toUpperCase());
+        System.out.println("═══════════════════════════════════════════════");
+    
+        for (Livro l : livros) {
+            if (l.getGenero().equalsIgnoreCase(genero)) {
+                encontrado = true;
+                System.out.println(" ,---.               " + l.getTitulo());
+                System.out.println(" |   |               Autor: " + l.getAutor());
+                System.out.println(" |   |               Disponíveis: " + l.getQuantidade());
+                System.out.println(" '---'");
+                System.out.println("-----------------------------------------------");
+            }
+        }
+
+        if (!encontrado) {
+            System.out.println("Nenhum livro cadastrado no gênero: " + genero);
+        }
+        System.out.println("═══════════════════════════════════════════════");
     }
 
     public Livro procurarLivro(String titulo) {
@@ -85,7 +110,7 @@ public class Biblioteca {
         }
     }
 
-    // Histórico de empréstimos
+    // --- Histórico de empréstimos ---
     public void registrarEmprestimo(Emprestimo emprestimo) {
         historico.add(emprestimo);
     }
@@ -104,7 +129,7 @@ public class Biblioteca {
         }
     }
 
-    // Disponibilidade e regras
+    // --- Disponibilidade e regras ---
     public boolean verificarDisponibilidade(String titulo) {
         Livro livro = procurarLivro(titulo);
         return livro != null && livro.isDisponivel();
@@ -114,7 +139,7 @@ public class Biblioteca {
         return usuario.getEmprestimosAtivos().size() < 4;
     }
 
-    // Empréstimos
+    // --- Empréstimos ---
     public void emprestarLivro(Usuario usuario, String titulo) {
         if (!podeEmprestar(usuario)) {
             System.out.println("Usuário " + usuario.getNome() + " já atingiu o limite de empréstimos ativos.");
@@ -139,7 +164,7 @@ public class Biblioteca {
         }
     }
 
-    // Devolução
+    // --- Devolução ---
     public void devolverLivro(Usuario usuario, String titulo) {
         Livro livro = procurarLivro(titulo);
         if (livro == null) {

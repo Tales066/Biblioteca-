@@ -46,18 +46,47 @@ public class Main {
                         String titulo = scanner.nextLine();
                         System.out.print("Digite o autor do livro: ");
                         String autor = scanner.nextLine();
+                        System.out.print("Digite o gênero do livro: ");
+                        String genero = scanner.nextLine();
                         System.out.print("Digite a quantidade disponível: ");
                         int quantidade = scanner.nextInt();
-                        scanner.nextLine(); // limpar buffer
-                        biblioteca.cadastrarLivro(new Livro(titulo, autor, quantidade));
+                        scanner.nextLine(); 
+                        biblioteca.cadastrarLivro(new Livro(titulo, autor, genero, quantidade));
                         System.out.println("Livro adicionado com sucesso!");
                         break;
 
                     case 4:
-                        System.out.println("=== Lista de Livros ===");
-                        biblioteca.listarLivros();
-                        break;
+                        System.out.println("\nEscolha o gênero para listar o acervo:");
+                        System.out.println("1 - Ficção");
+                        System.out.println("2 - Romance");
+                        System.out.println("3 - Terror");
+                        System.out.println("4 - Suspense");
+                        System.out.println("5 - Didático");
+                        System.out.println("6 - Comédia");
+                        System.out.println("7 - HQs");
+                        System.out.print("Sua opção: ");
 
+                        int op = scanner.nextInt();
+                        scanner.nextLine(); 
+
+                        String generoBusca = switch (op) {
+                            case 1 -> "Ficção";
+                            case 2 -> "Romance";
+                            case 3 -> "Terror";
+                            case 4 -> "Suspense";
+                            case 5 -> "Didático";
+                            case 6 -> "Comédia";
+                            case 7 -> "HQs";
+                            default -> null;
+                        };
+
+                        if (generoBusca != null) {
+                            
+                            biblioteca.listarLivrosPorGenero(generoBusca);
+                        } else {
+                            System.out.println("Opção de gênero inválida.");
+                        }
+                        break;
                     case 5:
                         System.out.print("Digite o título do livro para empréstimo: ");
                         String tituloEmprestimo = scanner.nextLine();
