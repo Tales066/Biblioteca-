@@ -5,7 +5,7 @@ public class Biblioteca {
     private ArrayList<Exibivel> itens = new ArrayList<>(); 
     private ArrayList<Usuario> usuarios = new ArrayList<>();
     private ArrayList<Livro> livros = new ArrayList<>();    
-    private ArrayList<Emprestimo> historicoEmprestimos = new ArrayList<>(); empréstimos
+    private ArrayList<Emprestimo> historicoEmprestimos = new ArrayList<>(); 
 
     public void cadastrarUser(Usuario usuario) {
         usuarios.add(usuario); 
