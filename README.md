@@ -27,7 +27,8 @@ project/
 │  ├─ Biblioteca.java   # Gerenciamento de acervo e regras
 │  ├─ Livro.java        # Modelo de dados dos livros
 │  ├─ Usuario.java      # Gestão de perfis e permissões
-│  └─ Emprestimo.java   # Lógica de transações e prazos
+│  ├─ Emprestimo.java   # Lógica de transações e prazos
+│  └─ Exibivel.java     # Lógica de comportamentos identicos
 ├─ Makefile             # Scripts de automação
 └─ README.md
 ```
