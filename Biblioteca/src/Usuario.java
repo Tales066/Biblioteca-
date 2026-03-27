@@ -1,12 +1,16 @@
 import java.util.ArrayList;
 
-public class Usuario {
+public class Usuario implements Exibivel { 
 
     private String nome;
+    private String cpf;
+    private String tipo;
     private ArrayList<Emprestimo> emprestimosAtivos;
 
-    public Usuario(String nome) {
+    public Usuario(String nome, String cpf, String tipo) {
         this.nome = nome;
+        this.cpf = cpf;
+        this.tipo = tipo;
         this.emprestimosAtivos = new ArrayList<>();
     }
 
@@ -15,12 +19,20 @@ public class Usuario {
         return nome;
     }
 
+    public String getCpf() {
+        return cpf;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
     public ArrayList<Emprestimo> getEmprestimosAtivos() {
         return emprestimosAtivos;
     }
 
     public boolean podePegarLivro() {
-        return emprestimosAtivos.size() < 4; 
+        return emprestimosAtivos.size() < 4; //Limite posto para os emprestimos.
     }
 
     public int quantidadeEmprestimos() {
@@ -35,13 +47,11 @@ public class Usuario {
         emprestimosAtivos.remove(emprestimo);
     }
 
-   
     public void listarLivrosPorGenero(String generoDesejado) {
         System.out.println("\n═══■ FILTRANDO POR GÊNERO: " + generoDesejado.toUpperCase() + " ■═══");
-        
+
         boolean encontrou = false;
         for (Emprestimo e : emprestimosAtivos) {
-           
             if (e.getLivro().getGenero().equalsIgnoreCase(generoDesejado)) {
                 encontrou = true;
                 System.out.println(" ,---.               " + e.getLivro().getTitulo());
@@ -60,15 +70,10 @@ public class Usuario {
         System.out.println("═══■════■════■════■════■════■════■════■════■═══");
     }
 
-    public void mostrarPerfil() {
-        System.out.println("\n═══■════■════■════■════■════■════■════■════■═══");
-        System.out.println("     ✦✧✦ PERFIL DO USUÁRIO ✦✧✦");
-        System.out.println("═══■════■════■════■════■════■════■════■════■═══");
-
-        System.out.println("Nome: " + nome);
-        System.out.println("Quantidade de empréstimos ativos: " + emprestimosAtivos.size());
-
-        if (!emprestimosAtivos.isEmpty()) {
+    private void mostrarEmprestimosAtivos() {
+        if (emprestimosAtivos.isEmpty()) {
+            System.out.println("Nenhum empréstimo ativo.");
+        } else {
             System.out.println("Empréstimos ativos:");
             for (Emprestimo e : emprestimosAtivos) {
                 System.out.println(" ,---.               " + e.getLivro().getTitulo());
@@ -79,9 +84,20 @@ public class Usuario {
                 System.out.println(" '---'");
                 System.out.println("----------------------");
             }
-        } else {
-            System.out.println("Nenhum empréstimo ativo.");
         }
+    }
+
+    @Override
+    public void mostrar() {
+        System.out.println("\n═══■════■════■════■════■════■════■════■════■═══");
+        System.out.println("     ✦✧✦ PERFIL DO USUÁRIO ✦✧✦");
+        System.out.println("═══■════■════■════■════■════■════■════■════■═══");
+
+        System.out.println("Nome: " + nome);
+        System.out.println("CPF: " + cpf);
+        System.out.println("Tipo: " + tipo);
+        System.out.println("Quantidade de empréstimos ativos: " + emprestimosAtivos.size());
+        mostrarEmprestimosAtivos();
 
         System.out.println("═══■════■════■════■════■════■════■════■════■═══");
     }

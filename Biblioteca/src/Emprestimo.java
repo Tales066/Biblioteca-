@@ -1,7 +1,7 @@
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-public class Emprestimo {
+public class Emprestimo implements Exibivel {  
 
     private Livro livro;
     private Usuario usuario;
@@ -13,11 +13,10 @@ public class Emprestimo {
         this.livro = livro;
         this.usuario = usuario;
         this.dataEmprestimo = LocalDate.now();
-        this.dataDevolucao = dataEmprestimo.plusMonths(1); 
-        this.ativo = true; 
+        this.dataDevolucao = dataEmprestimo.plusMonths(1);  
+        this.ativo = true;  
     }
 
-    // Getters
     public Livro getLivro() { return livro; }
     public Usuario getUsuario() { return usuario; }
     public LocalDate getDataEmprestimo() { return dataEmprestimo; }
@@ -25,7 +24,6 @@ public class Emprestimo {
     public boolean isAtivo() { return ativo; }
 
     public long getPrazoDevolucao() {
-       
         return ChronoUnit.DAYS.between(LocalDate.now(), dataDevolucao);
     }
    
@@ -34,10 +32,10 @@ public class Emprestimo {
     }
  
     public boolean estaAtrasado() {
-    
         return ativo && LocalDate.now().isAfter(dataDevolucao);
     }
     
+    @Override
     public void mostrar() {
         long prazo = getPrazoDevolucao();
         System.out.println("Livro: " + livro.getTitulo());

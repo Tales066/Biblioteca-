@@ -32,13 +32,34 @@ public class Main {
                     case 1:
                         System.out.print("Digite o nome do usuário: ");
                         String nomeUsuario = scanner.nextLine();
-                        biblioteca.cadastrarUser(new Usuario(nomeUsuario));
+                        System.out.print("Digite o CPF do usuário: ");
+                        String cpfUsuario = scanner.nextLine();
+
+                        int tipo = -1;
+                        do {
+                            System.out.println("Escolha o tipo de usuário:");
+                            System.out.println("1 - Graduação");
+                            System.out.println("2 - Pós-graduação");
+                            System.out.print("Sua opção: "); 
+                            if (scanner.hasNextInt()){
+                                tipo = scanner.nextInt();
+                                scanner.nextLine();  
+                            } else {
+                                scanner.nextLine();
+                                tipo = -1;
+                            } 
+                        } while (tipo < 1 || tipo > 2);
+
+                        String tipoUsuario = (tipo == 1) ? "Graduação" : "Pós-graduação";
+                        biblioteca.cadastrarUser(new Usuario(nomeUsuario, cpfUsuario, tipoUsuario));
                         System.out.println("Usuário adicionado com sucesso!");
                         break;
 
                     case 2:
                         System.out.println("=== Lista de Usuários ===");
-                        biblioteca.listarUsuarios();
+                        for (Usuario usuario : biblioteca.getUsuarios()) {  // Acessa todos os usuários
+                            usuario.mostrar();  // Exibe o perfil do usuário
+                        }
                         break;
 
                     case 3:
@@ -50,43 +71,18 @@ public class Main {
                         String genero = scanner.nextLine();
                         System.out.print("Digite a quantidade disponível: ");
                         int quantidade = scanner.nextInt();
-                        scanner.nextLine(); 
+                        scanner.nextLine();  
                         biblioteca.cadastrarLivro(new Livro(titulo, autor, genero, quantidade));
                         System.out.println("Livro adicionado com sucesso!");
                         break;
 
                     case 4:
-                        System.out.println("\nEscolha o gênero para listar o acervo:");
-                        System.out.println("1 - Ficção");
-                        System.out.println("2 - Romance");
-                        System.out.println("3 - Terror");
-                        System.out.println("4 - Suspense");
-                        System.out.println("5 - Didático");
-                        System.out.println("6 - Comédia");
-                        System.out.println("7 - HQs");
-                        System.out.print("Sua opção: ");
-
-                        int op = scanner.nextInt();
-                        scanner.nextLine(); 
-
-                        String generoBusca = switch (op) {
-                            case 1 -> "Ficção";
-                            case 2 -> "Romance";
-                            case 3 -> "Terror";
-                            case 4 -> "Suspense";
-                            case 5 -> "Didático";
-                            case 6 -> "Comédia";
-                            case 7 -> "HQs";
-                            default -> null;
-                        };
-
-                        if (generoBusca != null) {
-                            
-                            biblioteca.listarLivrosPorGenero(generoBusca);
-                        } else {
-                            System.out.println("Opção de gênero inválida.");
+                        System.out.println("=== Lista de Livros ===");
+                        for (Livro livro : biblioteca.getLivros()) {  
+                            livro.mostrar();
                         }
                         break;
+
                     case 5:
                         System.out.print("Digite o título do livro para empréstimo: ");
                         String tituloEmprestimo = scanner.nextLine();
@@ -161,7 +157,7 @@ public class Main {
                         String nomePerfil = scanner.nextLine();
                         Usuario usuarioPerfil = biblioteca.procurarUsuario(nomePerfil);
                         if (usuarioPerfil != null) {
-                            usuarioPerfil.mostrarPerfil();
+                            usuarioPerfil.mostrar();
                         } else {
                             System.out.println("Usuário não encontrado.");
                         }
@@ -177,7 +173,7 @@ public class Main {
 
             } catch (Exception e) {
                 System.out.println("Entrada inválida. Tente novamente.");
-                scanner.nextLine();
+                scanner.nextLine(); 
             }
 
         } while (opcao != 0);

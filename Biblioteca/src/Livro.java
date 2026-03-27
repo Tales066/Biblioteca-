@@ -1,4 +1,4 @@
-public class Livro {
+public class Livro implements Exibivel {
 
     private String titulo;
     private String autor;
@@ -45,10 +45,11 @@ public class Livro {
         quantidade++;
     }
 
+    @Override
     public void mostrar() {
         System.out.println(" ,---.               " + titulo);
         System.out.println(" |   |               Autor: " + autor);
-        System.out.println(" |   |               Gênero: " + genero); 
+        System.out.println(" |   |               Gênero: " + genero);
         System.out.println(" |   |               Disponíveis: " + quantidade);
         System.out.println(" '---'");
         System.out.println("----------------------");
