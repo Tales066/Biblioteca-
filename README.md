@@ -28,7 +28,8 @@ project/
 │  ├─ Livro.java        # Modelo de dados dos livros
 │  ├─ Usuario.java      # Gestão de perfis e permissões
 │  ├─ Emprestimo.java   # Lógica de transações e prazos
-│  └─ Exibivel.java     # Lógica de comportamentos identicos
+│  ├─ Exibivel.java     # Lógica de comportamentos identicos
+│  └─ Exibivel.java     # Lógica para a limpeza de menu   
 ├─ Makefile             # Scripts de automação
 └─ README.md
 ```
