@@ -9,6 +9,9 @@ public class Main {
         int opcao = -1;
 
         do {
+            ConsoleUtils.pause();
+            ConsoleUtils.clearConsole();
+            
             System.out.println("\n===============================================");
             System.out.println("             SISTEMA DE BIBLIOTECA ");
             System.out.println("===============================================");
@@ -57,8 +60,8 @@ public class Main {
 
                     case 2:
                         System.out.println("=== Lista de Usuários ===");
-                        for (Usuario usuario : biblioteca.getUsuarios()) {  // Acessa todos os usuários
-                            usuario.mostrar();  // Exibe o perfil do usuário
+                        for (Usuario usuario : biblioteca.getUsuarios()) {   
+                            usuario.mostrar();  
                         }
                         break;
 
