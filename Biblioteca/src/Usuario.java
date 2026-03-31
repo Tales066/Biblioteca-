@@ -31,9 +31,7 @@ public class Usuario implements Exibivel {
         return emprestimosAtivos;
     }
 
-    public boolean podePegarLivro() {
-        return emprestimosAtivos.size() < 4; //Limite posto para os emprestimos.
-    }
+    public abstract boolean podePegarLivro();
 
     public int quantidadeEmprestimos() {
         return emprestimosAtivos.size();
