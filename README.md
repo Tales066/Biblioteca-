@@ -23,15 +23,20 @@ A organização do código segue o padrão de responsabilidade única:
 ```text
 project/
 ├─ src/
-│  ├─ Main.java         # Ponto de entrada da aplicação
-│  ├─ Biblioteca.java   # Gerenciamento de acervo e regras
-│  ├─ Livro.java        # Modelo de dados dos livros
-│  ├─ Usuario.java      # Gestão de perfis e permissões
-│  ├─ Emprestimo.java   # Lógica de transações e prazos
-│  ├─ Exibivel.java     # Lógica de comportamentos identicos
-│  └─ Exibivel.java     # Lógica para a limpeza de menu   
-├─ Makefile             # Scripts de automação
-└─ README.md
+│  ├─ Main.java                # Ponto da aplicação
+│  ├─ Biblioteca.java          # Gerenciamento de acervos e regras
+│  ├─ Livro.java               # Modelo de dados dos livros + controle de estoque
+│  ├─ Usuario.java             # Classe abstrata do perfil básico dos usuários
+│  ├─ Graduacao.java           # Tipo de usuário 1
+│  ├─ Posgraduacao.java        # Tipo de usuário 22
+│  ├─ Emprestimo.java          # Controle de transações e prazos
+│  ├─ EmprestimoExcecao.java   # Exceção personalizada do sistema
+│  ├─ Exibivel.java            # Interface para padronizar exibição
+│  └─ ConsoleUtils.java        # Utilitário para limpar tela e pausar menu
+│
+├─ bin/                        # Arquivos compilados (.class)
+│
+└─ Makefile                   # Automação de build e execução
 ```
 
 ## 📁 Requisitos
