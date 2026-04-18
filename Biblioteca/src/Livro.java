@@ -33,12 +33,12 @@ public class Livro implements Exibivel {
         return quantidade > 0;
     }
 
-    public void emprestar() {
-        if (quantidade > 0) {
-            quantidade--;
-        } else {
-            System.out.println("O livro '" + titulo + "' não está disponível para empréstimo.");
+    public void emprestar() throws EmprestimoExcecao {
+        if (quantidade <= 0) {
+            throw new EmprestimoExcecao("Livro '" + titulo + "' não está disponível para empréstimo.");
         }
+        quantidade--;
+        
     }
 
     public void devolver() {

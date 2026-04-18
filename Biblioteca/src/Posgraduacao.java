@@ -1,7 +1,7 @@
 public class Posgraduacao extends Usuario {
 
-    public Posgraduacao(String nome) {
-        super(nome);
+    public Posgraduacao(String nome, String cpf) {
+        super(nome, cpf, "Pós-graduação");
     }
 
     @Override

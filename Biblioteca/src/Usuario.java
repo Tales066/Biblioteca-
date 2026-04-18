@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Usuario implements Exibivel { 
+public abstract class Usuario implements Exibivel { 
 
     private String nome;
     private String cpf;

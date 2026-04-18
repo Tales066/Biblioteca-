@@ -95,4 +95,56 @@ public class Biblioteca {
             emprestimo.mostrar();
         }
     }
+
+    public void realizarEmprestimo(String titulo, String nomeUsuario) throws EmprestimoExcecao {
+
+        Livro livro = procurarLivro(titulo);
+        if (livro == null) {
+            throw new EmprestimoExcecao("Livro não encontrado.");
+        }
+
+        Usuario usuario = procurarUsuario(nomeUsuario);
+        if (usuario == null) {
+            throw new EmprestimoExcecao("Usuário não encontrado.");
+        }
+
+        if (!usuario.podePegarLivro()) {
+            throw new EmprestimoExcecao("Usuário atingiu o limite de empréstimos.");
+        }
+
+        livro.emprestar();  
+
+        Emprestimo emprestimo = new Emprestimo(livro, usuario);
+        usuario.pegarEmprestimo(emprestimo);
+        registrarEmprestimo(emprestimo);
+    }
+
+    public void realizarDevolucao(String titulo) throws EmprestimoExcecao {
+
+        Livro livro = procurarLivro(titulo);
+        if (livro == null) {
+            throw new EmprestimoExcecao("Este livro não foi encontrado.");
+        }
+
+        Emprestimo emprestimoAtivo = null;
+
+        for (Emprestimo e : historicoEmprestimos) {
+            if (e.getLivro().equals(livro) && e.isAtivo()) {
+                emprestimoAtivo = e;
+                break;
+            }
+        }
+
+        if (emprestimoAtivo == null) {
+            throw new EmprestimoExcecao("Nenhum empréstimo ativo para este livro.");
+        }
+
+        if (!emprestimoAtivo.isAtivo()) {
+            throw new EmprestimoExcecao("Este empréstimo já foi finalizado.");
+        }
+
+        emprestimoAtivo.finalizar();
+        emprestimoAtivo.getUsuario().devolverEmprestimo(emprestimoAtivo);
+        livro.devolver();
+    }
 }

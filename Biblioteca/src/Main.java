@@ -33,35 +33,48 @@ public class Main {
 
                 switch (opcao) {
                     case 1:
+    
                         System.out.print("Digite o nome do usuário: ");
                         String nomeUsuario = scanner.nextLine();
+
                         System.out.print("Digite o CPF do usuário: ");
                         String cpfUsuario = scanner.nextLine();
 
                         int tipo = -1;
+
                         do {
                             System.out.println("Escolha o tipo de usuário:");
                             System.out.println("1 - Graduação");
                             System.out.println("2 - Pós-graduação");
-                            System.out.print("Sua opção: "); 
-                            if (scanner.hasNextInt()){
+                            System.out.print("Sua opção: ");
+
+                            if (scanner.hasNextInt()) {
                                 tipo = scanner.nextInt();
-                                scanner.nextLine();  
+                                scanner.nextLine();
                             } else {
                                 scanner.nextLine();
                                 tipo = -1;
-                            } 
+                            }
+
                         } while (tipo < 1 || tipo > 2);
 
-                        String tipoUsuario = (tipo == 1) ? "Graduação" : "Pós-graduação";
-                        biblioteca.cadastrarUser(new Usuario(nomeUsuario, cpfUsuario, tipoUsuario));
+                        Usuario usuario;
+
+                        if (tipo == 1) {
+                            usuario = new Graduacao(nomeUsuario, cpfUsuario);
+                        } else {
+                            usuario = new Posgraduacao(nomeUsuario, cpfUsuario);
+                        }
+
+                        biblioteca.cadastrarUser(usuario);
+
                         System.out.println("Usuário adicionado com sucesso!");
                         break;
 
                     case 2:
                         System.out.println("=== Lista de Usuários ===");
-                        for (Usuario usuario : biblioteca.getUsuarios()) {   
-                            usuario.mostrar();  
+                       for (Usuario u : biblioteca.getUsuarios()) {
+                         u.mostrar();
                         }
                         break;
 
@@ -87,60 +100,35 @@ public class Main {
                         break;
 
                     case 5:
-                        System.out.print("Digite o título do livro para empréstimo: ");
-                        String tituloEmprestimo = scanner.nextLine();
-                        Livro livro = biblioteca.procurarLivro(tituloEmprestimo);
+    
+                        try {
+                            System.out.print("Digite o título do livro para empréstimo: ");
+                            String tituloEmprestimo = scanner.nextLine();
 
-                        if (livro != null && livro.isDisponivel()) {
                             System.out.print("Digite o nome do usuário: ");
                             String nomeUser = scanner.nextLine();
-                            Usuario usuario = biblioteca.procurarUsuario(nomeUser);
 
-                            if (usuario != null) {
-                                if (usuario.podePegarLivro()) {
-                                    livro.emprestar();
-                                    Emprestimo emprestimo = new Emprestimo(livro, usuario);
-                                    usuario.pegarEmprestimo(emprestimo);
-                                    biblioteca.registrarEmprestimo(emprestimo);
+                            biblioteca.realizarEmprestimo(tituloEmprestimo, nomeUser);
 
-                                    System.out.println("Livro emprestado com sucesso!");
-                                    System.out.println("Data de devolução: " + emprestimo.getDataDevolucao());
-                                    System.out.println("Dias restantes para devolução: " + emprestimo.getPrazoDevolucao());
-                                } else {
-                                    System.out.println("Usuário já atingiu o limite de 4 livros.");
-                                }
-                            } else {
-                                System.out.println("Usuário não encontrado.");
-                            }
-                        } else {
-                            System.out.println("Livro não disponível ou não encontrado.");
+                            System.out.println("Livro emprestado com sucesso!");
+
+                        } catch (EmprestimoExcecao e) {
+                            System.out.println("Erro ao emprestar: " + e.getMessage());
                         }
                         break;
 
                     case 6:
-                        System.out.print("Digite o título do livro para devolução: ");
-                        String tituloDevolucao = scanner.nextLine();
-                        Livro livroDevolucao = biblioteca.procurarLivro(tituloDevolucao);
 
-                        if (livroDevolucao != null) {
-                            Emprestimo emprestimoAtivo = null;
-                            for (Emprestimo e : biblioteca.getHistorico()) {
-                                if (e.getLivro() == livroDevolucao && e.isAtivo()) {
-                                    emprestimoAtivo = e;
-                                    break;
-                                }
-                            }
+                        try {
+                            System.out.print("Digite o título do livro para devolução: ");
+                            String tituloDevolucao = scanner.nextLine();
 
-                            if (emprestimoAtivo != null) {
-                                emprestimoAtivo.finalizar();
-                                emprestimoAtivo.getUsuario().devolverEmprestimo(emprestimoAtivo);
-                                livroDevolucao.devolver();
-                                System.out.println("Livro devolvido com sucesso!");
-                            } else {
-                                System.out.println("Nenhum empréstimo ativo encontrado para este livro.");
-                            }
-                        } else {
-                            System.out.println("Livro não encontrado.");
+                            biblioteca.realizarDevolucao(tituloDevolucao);
+
+                            System.out.println("Livro devolvido com sucesso!");
+
+                        } catch (EmprestimoExcecao e) {
+                            System.out.println("Erro ao devolver: " + e.getMessage());
                         }
                         break;
 
