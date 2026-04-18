@@ -28,7 +28,7 @@ project/
 │  ├─ Livro.java               # Modelo de dados dos livros + controle de estoque
 │  ├─ Usuario.java             # Classe abstrata do perfil básico dos usuários
 │  ├─ Graduacao.java           # Tipo de usuário 1
-│  ├─ Posgraduacao.java        # Tipo de usuário 22
+│  ├─ Posgraduacao.java        # Tipo de usuário 2
 │  ├─ Emprestimo.java          # Controle de transações e prazos
 │  ├─ EmprestimoExcecao.java   # Exceção personalizada do sistema
 │  ├─ Exibivel.java            # Interface para padronizar exibição
