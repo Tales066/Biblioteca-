@@ -10,7 +10,6 @@ public class Biblioteca {
     public void cadastrarUser(Usuario usuario) {
         usuarios.add(usuario); 
         itens.add(usuario);  
-
     }
 
     public void cadastrarLivro(Livro livro) {
@@ -35,65 +34,66 @@ public class Biblioteca {
         return historicoEmprestimos; 
     }
 
-   
+    //Aplicando o lambda 
     public void listarItens() {
         if (itens.isEmpty()) {
             System.out.println("Nenhum item registrado no sistema.");
             return;
         }
+        itens.forEach(item -> item.mostrar());
+    }
+
+    // Aplicando generics para evitar duplicação de código
+    public <T> T procurarItem(Class<T> tipo, String valor) {
         for (Exibivel item : itens) {
-            item.mostrar();  
+            if (tipo.isInstance(item)) {
+                T obj = tipo.cast(item);
+
+                if (obj instanceof Usuario) {
+                    if (((Usuario) obj).getNome().equalsIgnoreCase(valor)) {
+                        return obj;
+                    }
+                }
+
+                if (obj instanceof Livro) {
+                    if (((Livro) obj).getTitulo().equalsIgnoreCase(valor)) {
+                        return obj;
+                    }
+                }
+            }
         }
+        return null;
     }
 
     public Usuario procurarUsuario(String nome) {
-        for (Exibivel item : itens) {
-            if (item instanceof Usuario) {  
-                Usuario usuario = (Usuario) item;  
-                if (usuario.getNome().equalsIgnoreCase(nome)) {
-                    return usuario;
-                }
-            }
-        }
-        return null;
+        return procurarItem(Usuario.class, nome);
     }
 
     public Livro procurarLivro(String titulo) {
-        for (Exibivel item : itens) {
-            if (item instanceof Livro) {  
-                Livro livro = (Livro) item;  
-                if (livro.getTitulo().equalsIgnoreCase(titulo)) {
-                    return livro;
-                }
-            }
-        }
-        return null;
+        return procurarItem(Livro.class, titulo);
     }
 
     public void procurarPorAutor(String autor) {
-        boolean encontrado = false;
-        for (Exibivel item : itens) {
-            if (item instanceof Livro) {  
-                Livro livro = (Livro) item;  
-                if (livro.getAutor().equalsIgnoreCase(autor)) {
-                    livro.mostrar();
-                    encontrado = true;
-                }
-            }
-        }
+        boolean encontrado = itens.stream()
+            .filter(item -> item instanceof Livro)
+            .map(item -> (Livro) item)
+            .filter(livro -> livro.getAutor().equalsIgnoreCase(autor))
+            .peek(livro -> livro.mostrar())
+            .findAny()
+            .isPresent();
+
         if (!encontrado) {
             System.out.println("Nenhum livro encontrado para o autor: " + autor);
         }
     }
+
 
     public void listarHistorico() {
         if (historicoEmprestimos.isEmpty()) {
             System.out.println("Nenhum empréstimo registrado no histórico.");
             return;
         }
-        for (Emprestimo emprestimo : historicoEmprestimos) {
-            emprestimo.mostrar();
-        }
+        historicoEmprestimos.forEach(e -> e.mostrar());
     }
 
     public void realizarEmprestimo(String titulo, String nomeUsuario) throws EmprestimoExcecao {

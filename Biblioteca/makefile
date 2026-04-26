@@ -1,27 +1,18 @@
 BIN_DIR = bin
-
 SRC_DIR = src
 
-ifeq ($(OS),Windows_NT)
-    CP_SEP = ;
-else
-    CP_SEP = :
-endif
+all: create_bin compile
 
-CLASSPATH = "$(SRC_DIR)$(CP_SEP)$(BIN_DIR)"
+create_bin:
+	mkdir -p $(BIN_DIR)
 
-all: create_bin
-	javac -cp $(CLASSPATH) $(SRC_DIR)/*.java -d $(BIN_DIR)
+compile:
+	javac -d $(BIN_DIR) $(SRC_DIR)/*.java
 
 run:
 	java -cp $(BIN_DIR) Main
 
-create_bin:
-	@mkdir -p $(BIN_DIR)
-
 clean:
-	@rm -rf $(BIN_DIR)
-	@echo "Arquivos temporários removidos."
-
+	rm -rf $(BIN_DIR)
 
 refresh: clean all run
