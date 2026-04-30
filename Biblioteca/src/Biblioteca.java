@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 
+
 public class Biblioteca {
 
     private ArrayList<Exibivel> itens = new ArrayList<>(); 
@@ -96,6 +97,7 @@ public class Biblioteca {
         historicoEmprestimos.forEach(e -> e.mostrar());
     }
 
+    @Log(valor = "Realizando empréstimo de livro")
     public void realizarEmprestimo(String titulo, String nomeUsuario) throws EmprestimoExcecao {
 
         Livro livro = procurarLivro(titulo);
@@ -119,6 +121,7 @@ public class Biblioteca {
         registrarEmprestimo(emprestimo);
     }
 
+    @Log(valor = "Realizando devolução de livro")
     public void realizarDevolucao(String titulo) throws EmprestimoExcecao {
 
         Livro livro = procurarLivro(titulo);
