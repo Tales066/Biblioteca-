@@ -49,6 +49,7 @@ project/
 ### Usando Make
 
 ```bash
+make all    # Compila e cria os arquivos na pasta bin, caso ele ainda não possua
 make        # Compila todos os arquivos .java
 make run    # Executa a classe Main
 make clean  # Remove arquivos .class
