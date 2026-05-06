@@ -28,7 +28,7 @@ public class ConsoleUtils {
         try {
             System.in.read();
         } catch (Exception e) {
-            // Ignora o erro, pois é apenas uma pausa simples.
+            
         }
     }
 }

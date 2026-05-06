@@ -6,169 +6,215 @@ public class Main {
 
         Biblioteca biblioteca = new Biblioteca();
         Scanner scanner = new Scanner(System.in);
-        int opcao = -1;
 
-        do {
-            ConsoleUtils.pause();
-            ConsoleUtils.clearConsole();
-            
-            System.out.println("\n===============================================");
-            System.out.println("             SISTEMA DE BIBLIOTECA ");
-            System.out.println("===============================================");
-            System.out.println("1 - Adicionar usuário");
-            System.out.println("2 - Listar usuários");
-            System.out.println("3 - Adicionar livro");
-            System.out.println("4 - Listar livros");
-            System.out.println("5 - Emprestar livro");
-            System.out.println("6 - Devolver livro");
-            System.out.println("7 - Buscar livro por autor");
-            System.out.println("8 - Ver histórico de empréstimos");
-            System.out.println("9 - Ver perfil do usuário");
-            System.out.println("0 - Sair");
-            System.out.print("Escolha uma opção: ");
+        // Usuários pré-cadastrados para facilitar os testes
+        Usuario admin = new Graduacao("admin", "000", Perfil.ADMIN);
+        Usuario u1 = new Graduacao("Talyta", "123", Perfil.ESTUDANTE);
+        Usuario u2 = new Posgraduacao("Joao", "456", Perfil.ESTUDANTE);
 
-            try {
-                opcao = scanner.nextInt();
-                scanner.nextLine(); 
+        biblioteca.cadastrarUser(admin);
+        biblioteca.cadastrarUser(u1);
+        biblioteca.cadastrarUser(u2);
 
-                switch (opcao) {
-                    case 1:
-    
-                        System.out.print("Digite o nome do usuário: ");
-                        String nomeUsuario = scanner.nextLine();
+        // ================= LOOP PRINCIPAL =================
+        while (true) {
 
-                        System.out.print("Digite o CPF do usuário: ");
-                        String cpfUsuario = scanner.nextLine();
+            String[] opcoesLogin = {
+                "Login",
+                "Sair"
+            };
 
-                        int tipo = -1;
+            int escolhaMenu = Menu.navegar(opcoesLogin, scanner);
 
-                        do {
-                            System.out.println("Escolha o tipo de usuário:");
-                            System.out.println("1 - Graduação");
-                            System.out.println("2 - Pós-graduação");
-                            System.out.print("Sua opção: ");
-
-                            if (scanner.hasNextInt()) {
-                                tipo = scanner.nextInt();
-                                scanner.nextLine();
-                            } else {
-                                scanner.nextLine();
-                                tipo = -1;
-                            }
-
-                        } while (tipo < 1 || tipo > 2);
-
-                        Usuario usuario;
-
-                        if (tipo == 1) {
-                            usuario = new Graduacao(nomeUsuario, cpfUsuario);
-                        } else {
-                            usuario = new Posgraduacao(nomeUsuario, cpfUsuario);
-                        }
-
-                        biblioteca.cadastrarUser(usuario);
-
-                        System.out.println("Usuário adicionado com sucesso!");
-                        break;
-
-                    case 2:
-                        System.out.println("=== Lista de Usuários ===");
-                       for (Usuario u : biblioteca.getUsuarios()) {
-                         u.mostrar();
-                        }
-                        break;
-
-                    case 3:
-                        System.out.print("Digite o título do livro: ");
-                        String titulo = scanner.nextLine();
-                        System.out.print("Digite o autor do livro: ");
-                        String autor = scanner.nextLine();
-                        System.out.print("Digite o gênero do livro: ");
-                        String genero = scanner.nextLine();
-                        System.out.print("Digite a quantidade disponível: ");
-                        int quantidade = scanner.nextInt();
-                        scanner.nextLine();  
-                        biblioteca.cadastrarLivro(new Livro(titulo, autor, genero, quantidade));
-                        System.out.println("Livro adicionado com sucesso!");
-                        break;
-
-                    case 4:
-                        System.out.println("=== Lista de Livros ===");
-                        for (Livro livro : biblioteca.getLivros()) {  
-                            livro.mostrar();
-                        }
-                        break;
-
-                    case 5:
-    
-                        try {
-                            System.out.print("Digite o título do livro para empréstimo: ");
-                            String tituloEmprestimo = scanner.nextLine();
-
-                            System.out.print("Digite o nome do usuário: ");
-                            String nomeUser = scanner.nextLine();
-
-                            biblioteca.realizarEmprestimo(tituloEmprestimo, nomeUser);
-
-                            System.out.println("Livro emprestado com sucesso!");
-
-                        } catch (EmprestimoExcecao e) {
-                            System.out.println("Erro ao emprestar: " + e.getMessage());
-                        }
-                        break;
-
-                    case 6:
-
-                        try {
-                            System.out.print("Digite o título do livro para devolução: ");
-                            String tituloDevolucao = scanner.nextLine();
-
-                            biblioteca.realizarDevolucao(tituloDevolucao);
-
-                            System.out.println("Livro devolvido com sucesso!");
-
-                        } catch (EmprestimoExcecao e) {
-                            System.out.println("Erro ao devolver: " + e.getMessage());
-                        }
-                        break;
-
-                    case 7:
-                        System.out.print("Digite o nome do autor: ");
-                        String autorBusca = scanner.nextLine();
-                        biblioteca.procurarPorAutor(autorBusca);
-                        break;
-
-                    case 8:
-                        System.out.println("=== Histórico de Empréstimos ===");
-                        biblioteca.listarHistorico();
-                        break;
-
-                    case 9:
-                        System.out.print("Digite o nome do usuário para visualizar o perfil: ");
-                        String nomePerfil = scanner.nextLine();
-                        Usuario usuarioPerfil = biblioteca.procurarUsuario(nomePerfil);
-                        if (usuarioPerfil != null) {
-                            usuarioPerfil.mostrar();
-                        } else {
-                            System.out.println("Usuário não encontrado.");
-                        }
-                        break;
-
-                    case 0:
-                        System.out.println("Saindo... Até depois hihi!");
-                        break;
-
-                    default:
-                        System.out.println("Opção inválida! Escolha novamente.");
-                }
-
-            } catch (Exception e) {
-                System.out.println("Entrada inválida. Tente novamente.");
-                scanner.nextLine(); 
+            if (escolhaMenu == 1) {
+                System.out.println(Cores.VERMELHO + "\nEncerrando sistema..." + Cores.RESET);
+                break;
             }
 
-        } while (opcao != 0);
+            // ================= LOGIN =================
+            System.out.print(Cores.AMARELO + "\n Digite seu nome: " + Cores.RESET);
+            String nomeLogin = scanner.nextLine().trim();
+
+            Usuario usuarioLogado = biblioteca.procurarUsuario(nomeLogin);
+
+            if (usuarioLogado == null) {
+                UI.erro("Usuário não encontrado!");
+                ConsoleUtils.pause();
+                continue;
+            }
+
+            UI.sucesso("Login realizado com sucesso!");
+            ConsoleUtils.pause();
+
+            // ================= MENU ESTUDANTE =================
+            if (usuarioLogado.getPerfil() == Perfil.ESTUDANTE) {
+
+                String[] opcoes = {
+                    "Pegar livro",
+                    "Devolver livro",
+                    "Ver perfil",
+                    "Buscar por autor",
+                    "Meu histórico",
+                    "Sair"
+                };
+
+                while (true) {
+
+                    int op = Menu.navegar(opcoes, scanner);
+
+                    switch (op) {
+
+                        case 0:
+                            try {
+                                System.out.print("Título: ");
+                                biblioteca.realizarEmprestimo(scanner.nextLine(), usuarioLogado.getNome());
+                                UI.sucesso("Livro emprestado!");
+                            } catch (Exception e) {
+                                UI.erro(e.getMessage());
+                            }
+                            break;
+
+                        case 1:
+                            try {
+                                System.out.print("Título: ");
+                                biblioteca.realizarDevolucao(scanner.nextLine());
+                                UI.sucesso("Livro devolvido!");
+                            } catch (Exception e) {
+                                UI.erro(e.getMessage());
+                            }
+                            break;
+
+                        case 2:
+                            usuarioLogado.mostrar();
+                            break;
+
+                        case 3:
+                            System.out.print("Autor: ");
+                            biblioteca.procurarPorAutor(scanner.nextLine());
+                            break;
+
+                        case 4:
+                            biblioteca.listarHistoricoDoUsuario(usuarioLogado);
+                            break;
+
+                        case 5:
+                            break;
+                    }
+
+                    if (op == 5) break;
+
+                    ConsoleUtils.pause();
+                }
+            }
+
+            // ================= MENU ADMIN =================
+            else {
+
+                String[] opcoes = {
+                    "Listar usuários",
+                    "Adicionar usuário",
+                    "Adicionar livro",
+                    "Listar livros",
+                    "Buscar por autor",
+                    "Ver histórico",
+                    "Ver perfil usuário",
+                    "Sair"
+                };
+
+                while (true) {
+
+                    int op = Menu.navegar(opcoes, scanner);
+
+                    switch (op) {
+
+                        case 0:
+                            biblioteca.getUsuarios().forEach(Usuario::mostrar);
+                            break;
+
+                        case 1:
+                            System.out.print("Nome: ");
+                            String nome = scanner.nextLine();
+
+                            System.out.print("CPF: ");
+                            String cpf = scanner.nextLine();
+
+                            int tipo = -1;
+                            do {
+                                System.out.println("Tipo: 1-Graduação | 2-Pós");
+                                if (scanner.hasNextInt()) {
+                                    tipo = scanner.nextInt();
+                                    scanner.nextLine();
+                                } else {
+                                    scanner.nextLine();
+                                }
+                            } while (tipo < 1 || tipo > 2);
+
+                            Usuario novo;
+
+                            if (tipo == 1) {
+                                novo = new Graduacao(nome, cpf, Perfil.ESTUDANTE);
+                            } else {
+                                novo = new Posgraduacao(nome, cpf, Perfil.ESTUDANTE);
+                            }
+
+                            biblioteca.cadastrarUser(novo);
+                            UI.sucesso("Usuário cadastrado!");
+                            break;
+
+                        case 2:
+                            System.out.print("Título: ");
+                            String titulo = scanner.nextLine();
+
+                            System.out.print("Autor: ");
+                            String autor = scanner.nextLine();
+
+                            System.out.print("Gênero: ");
+                            String genero = scanner.nextLine();
+
+                            System.out.print("Quantidade: ");
+                            int qtd = scanner.nextInt();
+                            scanner.nextLine();
+
+                            biblioteca.cadastrarLivro(new Livro(titulo, autor, genero, qtd));
+                            UI.sucesso("Livro cadastrado!");
+                            break;
+
+                        case 3:
+                            biblioteca.getLivros().forEach(Livro::mostrar);
+                            break;
+
+                        case 4:
+                            System.out.print("Autor: ");
+                            biblioteca.procurarPorAutor(scanner.nextLine());
+                            break;
+
+                        case 5:
+                            biblioteca.listarHistorico();
+                            break;
+
+                        case 6:
+                            System.out.print("Nome do usuário: ");
+                            Usuario u = biblioteca.procurarUsuario(scanner.nextLine());
+
+                            if (u != null) {
+                                u.mostrar();
+                            } else {
+                                UI.erro("Usuário não encontrado!");
+                            }
+                            break;
+
+                        case 7:
+                            break;
+                    }
+
+                    if (op == 7) break;
+
+                    ConsoleUtils.pause();
+                }
+            }
+        }
 
         scanner.close();
+        System.out.println("Sistema encerrado.");
     }
 }

@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 
-
 public class Biblioteca {
 
     private ArrayList<Exibivel> itens = new ArrayList<>(); 
@@ -96,6 +95,21 @@ public class Biblioteca {
         }
         historicoEmprestimos.forEach(e -> e.mostrar());
     }
+
+    public void listarHistoricoDoUsuario(Usuario usuario) {
+    boolean encontrado = false;
+
+    for (Emprestimo e : historicoEmprestimos) {
+        if (e.getUsuario().equals(usuario)) {
+            e.mostrar();
+            encontrado = true;
+        }
+    }
+
+    if (!encontrado) {
+        System.out.println("Nenhum histórico encontrado para este usuário.");
+    }
+}
 
     @Log(valor = "Realizando empréstimo de livro")
     public void realizarEmprestimo(String titulo, String nomeUsuario) throws EmprestimoExcecao {
