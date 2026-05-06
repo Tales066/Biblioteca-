@@ -77,6 +77,3 @@ make run    # Executa as classes
 make clean  # Remove arquivos .class
 
 ```
-
-make clean  # Remove arquivos .class
-```
