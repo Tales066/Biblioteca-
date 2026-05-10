@@ -5,14 +5,19 @@ public class Livro implements Exibivel {
     private String genero;
     private int quantidade;
 
-    public Livro(String titulo, String autor, String genero, int quantidade) {
+    public Livro(
+            String titulo,
+            String autor,
+            String genero,
+            int quantidade
+    ) {
+
         this.titulo = titulo;
         this.autor = autor;
         this.genero = genero;
         this.quantidade = quantidade;
     }
 
-    // Getters
     public String getTitulo() {
         return titulo;
     }
@@ -33,25 +38,45 @@ public class Livro implements Exibivel {
         return quantidade > 0;
     }
 
-    public void emprestar() throws EmprestimoExcecao {
+    public synchronized void emprestar()
+            throws EmprestimoExcecao {
+
         if (quantidade <= 0) {
-            throw new EmprestimoExcecao("Livro '" + titulo + "' não está disponível para empréstimo.");
+
+            throw new EmprestimoExcecao(
+                    "Livro '" + titulo
+                            + "' indisponível."
+            );
         }
+
         quantidade--;
-        
     }
 
-    public void devolver() {
+    public synchronized void devolver() {
         quantidade++;
     }
 
     @Override
     public void mostrar() {
-        System.out.println(" ,---.               " + titulo);
-        System.out.println(" |   |               Autor: " + autor);
-        System.out.println(" |   |               Gênero: " + genero);
-        System.out.println(" |   |               Disponíveis: " + quantidade);
+
+        System.out.println(
+                " ,---.               " + titulo);
+
+        System.out.println(
+                " |   |               Autor: "
+                        + autor);
+
+        System.out.println(
+                " |   |               Gênero: "
+                        + genero);
+
+        System.out.println(
+                " |   |               Disponíveis: "
+                        + quantidade);
+
         System.out.println(" '---'");
-        System.out.println("----------------------");
+
+        System.out.println(
+                "----------------------");
     }
 }

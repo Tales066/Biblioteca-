@@ -1,67 +1,96 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Biblioteca {
 
-    private ArrayList<Exibivel> itens = new ArrayList<>(); 
-    private ArrayList<Usuario> usuarios = new ArrayList<>();
-    private ArrayList<Livro> livros = new ArrayList<>();    
-    private ArrayList<Emprestimo> historicoEmprestimos = new ArrayList<>(); 
+    // ================= THREAD POOL =================
+    private ExecutorService executor = Executors.newFixedThreadPool(4);
+
+    private List<Exibivel> itens =
+            Collections.synchronizedList(new ArrayList<>());
+
+    private List<Usuario> usuarios =
+            Collections.synchronizedList(new ArrayList<>());
+
+    private List<Livro> livros =
+            Collections.synchronizedList(new ArrayList<>());
+
+    private List<Emprestimo> historicoEmprestimos =
+            Collections.synchronizedList(new ArrayList<>());
 
     public void cadastrarUser(Usuario usuario) {
-        usuarios.add(usuario); 
-        itens.add(usuario);  
+        usuarios.add(usuario);
+        itens.add(usuario);
     }
 
     public void cadastrarLivro(Livro livro) {
-        livros.add(livro);  
-        itens.add(livro);   
+        livros.add(livro);
+        itens.add(livro);
     }
 
-    public ArrayList<Usuario> getUsuarios() {
-        return usuarios; 
+    public List<Usuario> getUsuarios() {
+        return usuarios;
     }
 
-    public ArrayList<Livro> getLivros() {
-        return livros; 
+    public List<Livro> getLivros() {
+        return livros;
     }
 
     public void registrarEmprestimo(Emprestimo emprestimo) {
-        historicoEmprestimos.add(emprestimo); 
-        itens.add(emprestimo);  
+        historicoEmprestimos.add(emprestimo);
+        itens.add(emprestimo);
     }
 
-    public ArrayList<Emprestimo> getHistorico() {
-        return historicoEmprestimos; 
+    public List<Emprestimo> getHistorico() {
+        return historicoEmprestimos;
     }
 
-    //Aplicando o lambda 
     public void listarItens() {
+
         if (itens.isEmpty()) {
-            System.out.println("Nenhum item registrado no sistema.");
+            System.out.println("Nenhum item registrado.");
             return;
         }
-        itens.forEach(item -> item.mostrar());
+
+        itens.forEach(Exibivel::mostrar);
     }
 
-    // Aplicando generics para evitar duplicação de código
+    // GENERICS + SYNCHRONIZED
+
     public <T> T procurarItem(Class<T> tipo, String valor) {
-        for (Exibivel item : itens) {
-            if (tipo.isInstance(item)) {
-                T obj = tipo.cast(item);
 
-                if (obj instanceof Usuario) {
-                    if (((Usuario) obj).getNome().equalsIgnoreCase(valor)) {
-                        return obj;
+        synchronized (itens) {
+
+            for (Exibivel item : itens) {
+
+                if (tipo.isInstance(item)) {
+
+                    T obj = tipo.cast(item);
+
+                    if (obj instanceof Usuario) {
+
+                        if (((Usuario) obj).getNome()
+                                .equalsIgnoreCase(valor)) {
+
+                            return obj;
+                        }
                     }
-                }
 
-                if (obj instanceof Livro) {
-                    if (((Livro) obj).getTitulo().equalsIgnoreCase(valor)) {
-                        return obj;
+                    if (obj instanceof Livro) {
+
+                        if (((Livro) obj).getTitulo()
+                                .equalsIgnoreCase(valor)) {
+
+                            return obj;
+                        }
                     }
                 }
             }
         }
+
         return null;
     }
 
@@ -74,94 +103,179 @@ public class Biblioteca {
     }
 
     public void procurarPorAutor(String autor) {
-        boolean encontrado = itens.stream()
-            .filter(item -> item instanceof Livro)
-            .map(item -> (Livro) item)
-            .filter(livro -> livro.getAutor().equalsIgnoreCase(autor))
-            .peek(livro -> livro.mostrar())
-            .findAny()
-            .isPresent();
+
+        boolean encontrado = itens.parallelStream()
+                .filter(item -> item instanceof Livro)
+                .map(item -> (Livro) item)
+                .filter(livro ->
+                        livro.getAutor().equalsIgnoreCase(autor))
+                .peek(Livro::mostrar)
+                .findAny()
+                .isPresent();
 
         if (!encontrado) {
-            System.out.println("Nenhum livro encontrado para o autor: " + autor);
+            System.out.println(
+                    "Nenhum livro encontrado para o autor: "
+                            + autor);
         }
     }
 
-
     public void listarHistorico() {
+
         if (historicoEmprestimos.isEmpty()) {
-            System.out.println("Nenhum empréstimo registrado no histórico.");
+
+            System.out.println(
+                    "Nenhum empréstimo registrado.");
             return;
         }
-        historicoEmprestimos.forEach(e -> e.mostrar());
+
+        historicoEmprestimos.forEach(Emprestimo::mostrar);
     }
 
     public void listarHistoricoDoUsuario(Usuario usuario) {
-    boolean encontrado = false;
 
-    for (Emprestimo e : historicoEmprestimos) {
-        if (e.getUsuario().equals(usuario)) {
-            e.mostrar();
-            encontrado = true;
+        boolean encontrado = false;
+
+        synchronized (historicoEmprestimos) {
+
+            for (Emprestimo e : historicoEmprestimos) {
+
+                if (e.getUsuario().equals(usuario)) {
+
+                    e.mostrar();
+                    encontrado = true;
+                }
+            }
+        }
+
+        if (!encontrado) {
+
+            System.out.println(
+                    "Nenhum histórico encontrado.");
         }
     }
 
-    if (!encontrado) {
-        System.out.println("Nenhum histórico encontrado para este usuário.");
+    // ================= EXECUTORSERVICE =================
+
+    public void verificarEmprestimosAtrasados() {
+
+        if (historicoEmprestimos.isEmpty()) {
+
+            System.out.println(
+                    "Nenhum empréstimo registrado.");
+            return;
+        }
+
+        historicoEmprestimos.forEach(emprestimo -> {
+
+            executor.submit(() -> {
+
+                if (emprestimo.estaAtrasado()) {
+
+                    synchronized (System.out) {
+
+                        System.out.println(
+                                "\nLivro atrasado: "
+                                        + emprestimo.getLivro()
+                                        .getTitulo());
+
+                        System.out.println(
+                                "Usuário: "
+                                        + emprestimo.getUsuario()
+                                        .getNome());
+
+                        System.out.println(
+                                "Dias atrasado: "
+                                        + Math.abs(
+                                        emprestimo
+                                                .getPrazoDevolucao()
+                                ));
+                    }
+                }
+            });
+        });
     }
-}
 
     @Log(valor = "Realizando empréstimo de livro")
-    public void realizarEmprestimo(String titulo, String nomeUsuario) throws EmprestimoExcecao {
+    public void realizarEmprestimo(
+            String titulo,
+            String nomeUsuario
+    ) throws EmprestimoExcecao {
 
         Livro livro = procurarLivro(titulo);
+
         if (livro == null) {
-            throw new EmprestimoExcecao("Livro não encontrado.");
+            throw new EmprestimoExcecao(
+                    "Livro não encontrado.");
         }
 
         Usuario usuario = procurarUsuario(nomeUsuario);
+
         if (usuario == null) {
-            throw new EmprestimoExcecao("Usuário não encontrado.");
+            throw new EmprestimoExcecao(
+                    "Usuário não encontrado.");
         }
 
         if (!usuario.podePegarLivro()) {
-            throw new EmprestimoExcecao("Usuário atingiu o limite de empréstimos.");
+
+            throw new EmprestimoExcecao(
+                    "Usuário atingiu limite.");
         }
 
-        livro.emprestar();  
+        livro.emprestar();
 
-        Emprestimo emprestimo = new Emprestimo(livro, usuario);
+        Emprestimo emprestimo =
+                new Emprestimo(livro, usuario);
+
         usuario.pegarEmprestimo(emprestimo);
+
         registrarEmprestimo(emprestimo);
     }
 
-    @Log(valor = "Realizando devolução de livro")
-    public void realizarDevolucao(String titulo) throws EmprestimoExcecao {
+    @Log(valor = "Realizando devolução do livro")
+    public void realizarDevolucao(String titulo)
+            throws EmprestimoExcecao {
 
         Livro livro = procurarLivro(titulo);
+
         if (livro == null) {
-            throw new EmprestimoExcecao("Este livro não foi encontrado.");
+
+            throw new EmprestimoExcecao(
+                    "Livro não encontrado.");
         }
 
         Emprestimo emprestimoAtivo = null;
 
-        for (Emprestimo e : historicoEmprestimos) {
-            if (e.getLivro().equals(livro) && e.isAtivo()) {
-                emprestimoAtivo = e;
-                break;
+        synchronized (historicoEmprestimos) {
+
+            for (Emprestimo e : historicoEmprestimos) {
+
+                if (e.getLivro().equals(livro)
+                        && e.isAtivo()) {
+
+                    emprestimoAtivo = e;
+                    break;
+                }
             }
         }
 
         if (emprestimoAtivo == null) {
-            throw new EmprestimoExcecao("Nenhum empréstimo ativo para este livro.");
-        }
 
-        if (!emprestimoAtivo.isAtivo()) {
-            throw new EmprestimoExcecao("Este empréstimo já foi finalizado.");
+            throw new EmprestimoExcecao(
+                    "Nenhum empréstimo ativo.");
         }
 
         emprestimoAtivo.finalizar();
-        emprestimoAtivo.getUsuario().devolverEmprestimo(emprestimoAtivo);
+
+        emprestimoAtivo.getUsuario()
+                .devolverEmprestimo(
+                        emprestimoAtivo
+                );
+
         livro.devolver();
+    }
+
+    public void encerrarSistema() {
+        executor.shutdown();
     }
 }
